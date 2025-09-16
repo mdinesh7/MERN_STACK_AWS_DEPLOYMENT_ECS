@@ -16,6 +16,8 @@ env:
   ECS_CLUSTER: mern-app-cluster # Change this to your ECS cluster name from terraform/ecs.tf
   ECS_SERVICE_SERVER: mern-app-server-service # Change this to your server's ECS service name
   ECS_SERVICE_WEBAPP: mern-app-webapp-service # Change this to your webapp's ECS service name
+  ECS_TASK_DEFINITION_SERVER: mern-app-server      # <-- ADD THIS LINE
+  ECS_TASK_DEFINITION_WEBAPP: mern-app-webapp      # <-- ADD THIS LINE
   CONTAINER_NAME_SERVER: server # Container name from terraform/ecs.tf
   CONTAINER_NAME_WEBAPP: webapp # Container name from terraform/ecs.tf
 
@@ -66,7 +68,7 @@ jobs:
       - name: Download existing SERVER task definition
         # Downloads the current task definition file from ECS
         run: |
-          aws ecs describe-task-definition --task-definition ${{ env.ECS_SERVICE_SERVER }} --query taskDefinition > task-definition-server.json
+          aws ecs describe-task-definition --task-definition ${{ env.ECS_TASK_DEFINITION_SERVER }} --query taskDefinition > task-definition-server.json
 
       - name: Fill in the new SERVER image ID in the Amazon ECS task definition
         # Updates the task definition with the new image URI from the build step
@@ -89,8 +91,8 @@ jobs:
       - name: Download existing WEBAPP task definition
         # Repeats the process for the webapp
         run: |
-          aws ecs describe-task-definition --task-definition ${{ env.ECS_SERVICE_WEBAPP }} --query taskDefinition > task-definition-webapp.json
-
+          aws ecs describe-task-definition --task-definition ${{ env.ECS_TASK_DEFINITION_WEBAPP }} --query taskDefinition > task-definition-webapp.json
+          
       - name: Fill in the new WEBAPP image ID in the Amazon ECS task definition
         id: task-def-webapp
         uses: aws-actions/amazon-ecs-render-task-definition@v1
