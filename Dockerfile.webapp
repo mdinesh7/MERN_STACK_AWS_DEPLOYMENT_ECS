@@ -15,7 +15,7 @@ RUN npm install
 COPY webapp/ .
 
 # Run the build script from your package.json
-RUN npm run build
+RUN NODE_OPTIONS=--openssl-legacy-provider npm run build
 
 # ---- Serve Stage ----
 # Serve the static files from the build stage using Nginx
