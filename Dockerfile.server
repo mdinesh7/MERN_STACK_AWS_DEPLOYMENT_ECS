@@ -1,0 +1,22 @@
+# Dockerfile.server
+
+# Use an official Node.js runtime as a parent image
+FROM node:18-alpine
+
+# Set the working directory in the container
+WORKDIR /usr/src/app
+
+# Copy package.json and package-lock.json from your 'server' folder
+COPY server/package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the server's source code
+COPY server/ .
+
+# Your server runs on port 3003, so we expose it
+EXPOSE 3003
+
+# The exact command from your package.json to run your app
+CMD [ "node", "--experimental-modules", "--es-module-specifier-resolution=node", "server.js" ]
